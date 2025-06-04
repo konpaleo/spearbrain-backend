@@ -1,0 +1,8 @@
+[tool.poetry]
+name = "spearbrain"
+version = "0.1.0"
+description = "Spearfishing app"
+authors = ["Konstantinos Palaiologos <konpaleo@hotmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "app"}]
