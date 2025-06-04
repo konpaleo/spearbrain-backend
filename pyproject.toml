@@ -6,3 +6,8 @@ authors = ["Konstantinos Palaiologos <konpaleo@hotmail.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [{include = "app"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+python-dotenv = "^1.0.1"
+pydantic = "^2.9.2"
