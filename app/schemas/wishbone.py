@@ -8,3 +8,11 @@ class Wishbone(BaseModel):
     length: int
 
     model_config = ConfigDict(use_enum_values=True)
+
+
+class WishboneLine(BaseModel):
+    type: WishboneType = WishboneType.LINE
+
+
+class WishboneMetal(BaseModel):
+    type: WishboneType = WishboneType.METAL

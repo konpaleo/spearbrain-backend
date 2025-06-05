@@ -2,18 +2,18 @@ from enum import Enum
 
 
 class SpeargunType(str, Enum):
-    OPEN_HEAD = "OpenHead"
-    CLOSED_HEAD = "ClosedHead"
-    ROLLER = "Roller"
-    INVERT = "Invert"
+    OPEN_HEAD = "open_head"
+    CLOSED_HEAD = "closed_head"
+    ROLLER = "roller"
+    INVERT = "invert"
 
 
 class SpeargunMaterial(str, Enum):
-    ALUMINUM = "Aluminum"
-    CARBON = "Carbon"
-    WOOD = "Wood"
+    ALUMINUM = "aluminum"
+    CARBON = "carbon"
+    WOOD = "wood"
 
 
 class WishboneType(str, Enum):
     LINE = "line"
-    METAL = "Metal"
+    METAL = "metal"

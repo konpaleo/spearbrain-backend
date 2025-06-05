@@ -1,38 +1,78 @@
 from pydantic import BaseModel, ConfigDict
 
 from app.enums.speargun import SpeargunMaterial, SpeargunType
+from app.schemas.band import Band
+from app.schemas.shaft import Shaft
 
 
 class SpeargunBase(BaseModel):
     type: SpeargunType
-    material: SpeargunMaterial
+    bands: list[Band]
+    shaft: Shaft | None = None
+    material: SpeargunMaterial | None = None
 
     model_config = ConfigDict(use_enum_values=True)
 
 
 class SpeargunOpen(SpeargunBase):
     type: SpeargunType = SpeargunType.OPEN_HEAD
-    material: SpeargunMaterial
+    muzzle_dead_length: float = 2
 
-    model_config = ConfigDict(use_enum_values=True)
+    def get_effective_length(self, band: Band) -> float:
+        return band.loading_length - (band.wishbone.length / 2) - band.knot_dead_length
+
+    def calculate_band_lengths(self) -> list[float | None]:
+        return [self._calculate_single_band_length(band) for band in self.bands]
+
+    def _calculate_single_band_length(self, band: Band) -> float | None:
+        effective_length = self.get_effective_length(band)
+        length = (
+            2 * ((effective_length / band.stretch_coeff) + band.knot_dead_length)
+            + self.muzzle_dead_length
+        )
+        return round(length, 2)
+
+    def calculate_band_streches(self) -> list[float | None]:
+        return [self._calculate_single_band_strech(band) for band in self.bands]
+
+    def _calculate_single_band_strech(self, band: Band) -> float | None:
+        effective_length = self.get_effective_length(band)
+        stretch = effective_length * (
+            1 / (((band.length - self.muzzle_dead_length) / 2) - band.knot_dead_length)
+        )
+        return round(stretch, 2)
 
 
 class SpeargunClosed(SpeargunBase):
     type: SpeargunType = SpeargunType.CLOSED_HEAD
-    material: SpeargunMaterial
 
-    model_config = ConfigDict(use_enum_values=True)
+    def get_effective_length(self, band: Band) -> float:
+        return (
+            band.loading_length - (band.wishbone.length / 2) - 2 * band.knot_dead_length
+        )
+
+    def calculate_band_lengths(self) -> list[float | None]:
+        return [self._calculate_single_band_length(band) for band in self.bands]
+
+    def _calculate_single_band_length(self, band: Band) -> float | None:
+        effective_length = self.get_effective_length(band)
+        length = (effective_length / band.stretch_coeff) + 2 * band.knot_dead_length
+        return round(length, 2)
+
+    def calculate_band_streches(self) -> list[float | None]:
+        return [self._calculate_single_band_strech(band) for band in self.bands]
+
+    def _calculate_single_band_strech(self, band: Band) -> float | None:
+        effective_length = self.get_effective_length(band)
+        stretch = effective_length * (
+            1 / (((band.length - self.muzzle_dead_length) / 2) - band.knot_dead_length)
+        )
+        return round(stretch, 2)
 
 
 class SpeargunRoller(SpeargunBase):
     type: SpeargunType = SpeargunType.ROLLER
-    material: SpeargunMaterial
-
-    model_config = ConfigDict(use_enum_values=True)
 
 
 class SpeargunInvert(SpeargunBase):
     type: SpeargunType = SpeargunType.INVERT
-    material: SpeargunMaterial
-
-    model_config = ConfigDict(use_enum_values=True)

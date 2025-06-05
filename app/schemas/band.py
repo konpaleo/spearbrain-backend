@@ -1,8 +1,12 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
+
+from app.schemas.wishbone import Wishbone
 
 
 class Band(BaseModel):
-    length: float | None
-    stretch_coeff: float | None
-
-    model_config = ConfigDict(use_enum_values=True)
+    loading_length: float
+    wishbone: Wishbone
+    knot_dead_length: float = 0.5
+    stretch_coeff: float | None = None
+    length: float | None = None
+    phi: float | None = None
