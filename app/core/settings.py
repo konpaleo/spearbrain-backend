@@ -1,4 +1,4 @@
-from app.core.configuration import (
+from app.core.config import (
     ApplicationSettings,
 )
 
