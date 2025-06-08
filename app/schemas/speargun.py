@@ -19,12 +19,15 @@ class SpeargunOpen(SpeargunBase):
     muzzle_dead_length: float = 2
 
     def get_effective_length(self, band: Band) -> float:
-        return band.loading_length - (band.wishbone.length / 2) - band.knot_dead_length
+        return band.loading_length - band.wishbone.dead_length - band.knot_dead_length
 
     def calculate_band_lengths(self) -> list[float | None]:
         return [self._calculate_single_band_length(band) for band in self.bands]
 
     def _calculate_single_band_length(self, band: Band) -> float | None:
+        """
+        Length refers to one circular band, from end to end.
+        """
         effective_length = self.get_effective_length(band)
         length = (
             2 * ((effective_length / band.stretch_coeff) + band.knot_dead_length)
@@ -48,13 +51,16 @@ class SpeargunClosed(SpeargunBase):
 
     def get_effective_length(self, band: Band) -> float:
         return (
-            band.loading_length - (band.wishbone.length / 2) - 2 * band.knot_dead_length
+            band.loading_length - band.wishbone.dead_length - 2 * band.knot_dead_length
         )
 
     def calculate_band_lengths(self) -> list[float | None]:
         return [self._calculate_single_band_length(band) for band in self.bands]
 
     def _calculate_single_band_length(self, band: Band) -> float | None:
+        """
+        Length refers to one band, from end to end.
+        """
         effective_length = self.get_effective_length(band)
         length = (effective_length / band.stretch_coeff) + 2 * band.knot_dead_length
         return round(length, 2)
@@ -64,9 +70,7 @@ class SpeargunClosed(SpeargunBase):
 
     def _calculate_single_band_strech(self, band: Band) -> float | None:
         effective_length = self.get_effective_length(band)
-        stretch = effective_length * (
-            1 / (((band.length - self.muzzle_dead_length) / 2) - band.knot_dead_length)
-        )
+        stretch = effective_length / (band.length - 2 * band.knot_dead_length)
         return round(stretch, 2)
 
 
