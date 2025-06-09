@@ -1,23 +1,18 @@
-from abc import ABC, abstractmethod
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
 
 from app.enums.speargun import WishboneType
 
 
-class Wishbone(BaseModel, ABC):
+class WishboneBase(BaseModel):
     type: WishboneType
-
-    @property
-    @abstractmethod
-    def dead_length(self) -> float:
-        pass
 
     model_config = ConfigDict(use_enum_values=True)
 
 
-class WishboneLine(Wishbone):
-    type: WishboneType = WishboneType.LINE
+class WishboneLine(WishboneBase):
+    type: Literal[WishboneType.LINE] = WishboneType.LINE
     length: float  # in cm
 
     @property
@@ -25,10 +20,14 @@ class WishboneLine(Wishbone):
         return self.length / 2
 
 
-class WishboneMetal(Wishbone):
-    type: WishboneType = WishboneType.METAL
-    _dead_length: float = 2.0  # fixed
+class WishboneMetal(WishboneBase):
+    type: Literal[WishboneType.METAL] = WishboneType.METAL
+    _dead_length: float = 2.0
 
     @property
     def dead_length(self) -> float:
         return self._dead_length
+
+
+# Discriminated Union for parsing
+Wishbone = WishboneLine | WishboneMetal

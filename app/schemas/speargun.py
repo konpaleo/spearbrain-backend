@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict
 
 from app.enums.speargun import SpeargunMaterial, SpeargunType
@@ -15,7 +17,7 @@ class SpeargunBase(BaseModel):
 
 
 class SpeargunOpen(SpeargunBase):
-    type: SpeargunType = SpeargunType.OPEN_HEAD
+    type: Literal[SpeargunType.OPEN_HEAD] = SpeargunType.OPEN_HEAD
     muzzle_dead_length: float = 2
 
     def get_effective_length(self, band: Band) -> float:
@@ -47,7 +49,7 @@ class SpeargunOpen(SpeargunBase):
 
 
 class SpeargunClosed(SpeargunBase):
-    type: SpeargunType = SpeargunType.CLOSED_HEAD
+    type: Literal[SpeargunType.CLOSED_HEAD] = SpeargunType.CLOSED_HEAD
 
     def get_effective_length(self, band: Band) -> float:
         return (
@@ -75,8 +77,11 @@ class SpeargunClosed(SpeargunBase):
 
 
 class SpeargunRoller(SpeargunBase):
-    type: SpeargunType = SpeargunType.ROLLER
+    type: Literal[SpeargunType.ROLLER] = SpeargunType.ROLLER
 
 
 class SpeargunInvert(SpeargunBase):
-    type: SpeargunType = SpeargunType.INVERT
+    type: Literal[SpeargunType.INVERT] = SpeargunType.INVERT
+
+
+Speargun = SpeargunOpen | SpeargunClosed | SpeargunRoller | SpeargunInvert
