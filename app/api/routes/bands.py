@@ -12,7 +12,7 @@ router = APIRouter()
     tags=["Bands"],
 )
 def calculate_band_lengths(payload: SpeargunRequest):
-    return {"band_lengths": payload.speargun.calculate_band_lengths()}
+    return {"bands": payload.speargun.calculate_band_lengths()}
 
 
 @router.post(
@@ -22,4 +22,4 @@ def calculate_band_lengths(payload: SpeargunRequest):
     tags=["Bands"],
 )
 def calculate_bands_stretch(payload: SpeargunRequest):
-    return {"band_lengths": payload.speargun.calculate_band_streches()}
+    return {"bands": payload.speargun.calculate_band_streches()}
