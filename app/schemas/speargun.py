@@ -20,7 +20,8 @@ class SpeargunOpen(SpeargunBase):
     type: Literal[SpeargunType.OPEN_HEAD] = SpeargunType.OPEN_HEAD
     muzzle_dead_length: float = 2
 
-    def get_effective_length(self, band: Band) -> float:
+    @staticmethod
+    def get_effective_length(band: Band) -> float:
         return band.loading_length - band.wishbone.dead_length - band.knot_dead_length
 
     def calculate_band_lengths(self) -> list[float | None]:
@@ -51,7 +52,8 @@ class SpeargunOpen(SpeargunBase):
 class SpeargunClosed(SpeargunBase):
     type: Literal[SpeargunType.CLOSED_HEAD] = SpeargunType.CLOSED_HEAD
 
-    def get_effective_length(self, band: Band) -> float:
+    @staticmethod
+    def get_effective_length(band: Band) -> float:
         return (
             band.loading_length - band.wishbone.dead_length - 2 * band.knot_dead_length
         )
